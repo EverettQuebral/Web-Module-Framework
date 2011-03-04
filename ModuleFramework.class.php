@@ -31,7 +31,7 @@
  * 
  */
 
-require_once("Curl.class.php");
+require_once("Connection.class.php");
 require_once("Utility.class.php");
  
 class ModuleFramework {
@@ -174,7 +174,7 @@ class ModuleFramework {
     			$args[(string)$argument->Name] = (string)$argument->Value;
     		}
     	}
-    	$result = Curl::getResult($endPoint, $args);
+    	$result = Connection::getResult($endPoint, $args);
     	return json_decode($result, true);
     }
     
