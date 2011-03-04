@@ -24,12 +24,6 @@
  * THE SOFTWARE.
  * 
  * 
- * The Base Module class
- * 
- * I'd like to implement this as an Abstract Class
- * but at the same time I want to user to just use this class
- * as a Default Module to provide RAPID testing
- * 
  * @author: Everett Quebral
  * 
  */

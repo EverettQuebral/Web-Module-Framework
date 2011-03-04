@@ -31,6 +31,7 @@
  * 
  */
 
+require_once("Curl.class.php");
 require_once("Utility.class.php");
  
 class ModuleFramework {

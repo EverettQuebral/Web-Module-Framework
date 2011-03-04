@@ -29,7 +29,6 @@
  * @author: Everett Quebral
  */
 
-require_once("Curl.class.php");
 require_once("Module.class.php");
 //require_once("IDataModule.interface.php");
 

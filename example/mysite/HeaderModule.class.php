@@ -2,9 +2,9 @@
 require_once("Module.class.php");
 
 class HeaderModule extends Module {
+	
     public function __construct($modId){
-        $this->modId = $modId;
-        error_log("construct Header Module " . $modId);
+        parent::__construct($modId);
     }
 
     public function renderDefault(){
