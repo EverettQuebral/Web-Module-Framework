@@ -1,0 +1,73 @@
+.module-content {
+    border : none;
+    font-size : 13px;
+    margin : 0;
+    padding : 0;
+}
+
+li {
+	float : left;
+}
+
+.photo {
+	height : 330px;
+	text-align : center;
+	width : 292px;
+	list-style-position : outside;
+}
+
+.photo {
+	padding : 0 2px;
+}
+
+.photoset {
+	overflow : hidden;
+	display : block;
+	margin : 20px auto;
+}
+
+/** the navigation piece of the content **/
+.module-content li a {
+	display : inline-block;
+	padding : 5px 10px;
+}
+
+..module-content li.right-divider {
+	border-right : 1px solid #EEE;
+}
+
+.module-content li.left-divider {
+	border-left : 1px solid #EEE;
+}
+
+.module-content li.right {
+	float : right;
+}
+
+.module-content li {
+	float : left;
+}
+
+.module-content ul.menu {
+	height : 30px;
+}
+
+/** override the ul **/
+.module-content ul {
+	margin : 0;
+}
+
+.module-content .single-photo {
+	 margin: 0 auto; 
+	 text-align:center;
+}
+
+.module-content h3 a {
+	display : block;
+}
+
+
+.module-content .bd h2 {
+	height : 75px;
+}
+

@@ -1,0 +1,9 @@
+{
+	"interesting":"INTERESTING",
+	"favorites":"FAVORITES",
+	"sets":"SETS",
+	"photos":"PHOTOS",
+	"thumb":"THUMB",
+	"small":"SMALL",
+	"aboutMe":"About Me"
+}

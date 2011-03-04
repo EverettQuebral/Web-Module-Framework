@@ -1,0 +1,32 @@
+.module-navigation {
+    height : 26px;
+    font-size : 13px;
+    margin : 0;
+    padding : 0;
+}
+
+.module-navigation li a {
+	display : inline-block;
+	padding : 5px 10px;
+}
+
+.module-navigation li.right-divider {
+	border-right : 1px solid #EEE;
+}
+
+.module-navigation li.left-divider {
+	border-left : 1px solid #EEE;
+}
+
+.module-navigation li.right {
+	float : right;
+}
+
+.module-navigation li {
+	float : left;
+}
+
+/** override the ul **/
+.module-navigation ul {
+	margin : 0;
+}

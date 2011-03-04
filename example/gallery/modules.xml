@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Page>
+    <Module id="module-header">
+        <Class>HeaderModule</Class>
+        <Renderers>
+            <Renderer id="view-1" default="true">renderDefault</Renderer>
+        </Renderers>
+    </Module>
+    <Module id="module-footer">
+    	<Class>FooterModule</Class>
+    	<Renderers>
+    		<Renderer id="view-1" default="true">renderDefault</Renderer>
+    	</Renderers>
+    </Module>
+    <!--
+    <Module id="module-navigation">
+    	<Class>NavigationModule</Class>
+    	<Renderers>
+    		<Renderer id="view-1" default="true">renderDefault</Renderer>
+    	</Renderers>
+    	<Includes>
+    		<Include type="css">css/navigation-module.css</Include>
+    	</Includes>
+    </Module>
+    -->
+    <Module id="module-content">
+    	<Class>ContentModule</Class>
+    	<Sources>
+    		<Source id="interesting" bindTo="interesting">
+    			<EndPoint>http://query.yahooapis.com/v1/public/yql</EndPoint>
+    			<Arguments>
+    				<Argument>
+    					<Name>q</Name>
+    					<Value>select * from flickr.photos.interestingness(21)</Value>
+    				</Argument>
+    				<Argument>
+    					<Name>format</Name>
+    					<Value>json</Value>
+    				</Argument>
+    				<!-- this argument needs a dynamic value that will be passed by the framework -->
+    				<Argument>
+    					<Name>test</Name>
+    					<Value>{$testingVariable}</Value>
+    				</Argument>
+    			</Arguments>
+    		</Source>
+    		<Source id="favorites" bindTo="favorites">
+    			<EndPoint>http://query.yahooapis.com/v1/public/yql</EndPoint>
+    			<Arguments>
+    				<Argument>
+    					<Name>q</Name>
+    					<Value>select * from flickr.photos.interestingness(21)</Value>
+    				</Argument>
+    				<Argument>
+    					<Name>format</Name>
+    					<Value>json</Value>
+    				</Argument>
+    			</Arguments>
+    		</Source>
+    		<Source id="sets" bindTo="sets">
+    			<EndPoint>http://api.flickr.com/services/rest/</EndPoint>
+    			<Arguments>
+    				<Argument>
+    					<Name>user_id</Name>
+    					<Value>90388533@N00</Value>
+    				</Argument>
+    				<Argument>
+    					<Name>api_key</Name>
+    					<Value>46535897d28aa09d15017d0724ca7ee0</Value>
+    				</Argument>
+    				<Argument>
+    					<Name>format</Name>
+    					<Value>json</Value>
+    				</Argument>
+    				<Argument>
+    					<Name>method</Name>
+    					<Value>flickr.photosets.getList</Value>
+    				</Argument>
+    				<Argument>
+    					<Name>nojsoncallback</Name>
+    					<Value>1</Value>
+    				</Argument>
+    			</Arguments>
+    		</Source>
+    		<Source id="set" bindTo="set">
+    			<EndPoint>http://api.flickr.com/services/rest/</EndPoint>
+    			<Arguments>
+    				<Argument>
+    					<Name>user_id</Name>
+    					<Value>90388533@N00</Value>
+    				</Argument>
+    				<Argument>
+    					<Name>api_key</Name>
+    					<Value>46535897d28aa09d15017d0724ca7ee0</Value>
+    				</Argument>
+    				<Argument>
+    					<Name>format</Name>
+    					<Value>json</Value>
+    				</Argument>
+    				<Argument>
+    					<Name>method</Name>
+    					<Value>flickr.photosets.getPhotos</Value>
+    				</Argument>
+					<Argument>
+    					<Name>photoset_id</Name>
+    					<Value>{$photosetId}</Value>
+    				</Argument>
+					<Argument>
+    					<Name>page</Name>
+    					<Value>{$page}</Value>
+    				</Argument>
+    				<Argument>
+    					<Name>per_page</Name>
+    					<Value>{$perPage}</Value>
+    				</Argument>
+    				<Argument>
+    					<Name>nojsoncallback</Name>
+    					<Value>1</Value>
+    				</Argument>
+    			</Arguments>
+    		</Source>
+    		<!--
+    		<Source id="photos" bindTo="photos">
+    			<EndPoint>http://query.yahooapis.com/v1/public/yql</EndPoint>
+    			<Arguments>
+    				<Argument>
+    					<Name>q</Name>
+    					<Value>SELECT * FROM flickr.people.publicphotos(0,9) WHERE user_id='90388533@N00'</Value>
+    				</Argument>
+    				<Argument>
+    					<Name>format</Name>
+    					<Value>json</Value>
+    				</Argument>
+    			</Arguments>
+    		</Source>
+    		-->
+    		<Source id="photos" bindTo="photos">
+    			<EndPoint>http://api.flickr.com/services/rest/</EndPoint>
+    			<Arguments>
+    				<Argument>
+    					<Name>user_id</Name>
+    					<Value>90388533@N00</Value>
+    				</Argument>
+    				<Argument>
+    					<Name>api_key</Name>
+    					<Value>46535897d28aa09d15017d0724ca7ee0</Value>
+    				</Argument>
+    				<Argument>
+    					<Name>format</Name>
+    					<Value>json</Value>
+    				</Argument>
+    				<Argument>
+    					<Name>method</Name>
+    					<Value>flickr.people.getPublicPhotos</Value>
+    				</Argument>
+					<Argument>
+    					<Name>page</Name>
+    					<Value>{$page}</Value>
+    				</Argument>
+    				<Argument>
+    					<Name>per_page</Name>
+    					<Value>{$perPage}</Value>
+    				</Argument>
+    				<Argument>
+    					<Name>nojsoncallback</Name>
+    					<Value>1</Value>
+    				</Argument>
+    			</Arguments>
+    		</Source>
+			<Source id="photos" bindTo="photos">
+    			<EndPoint>http://api.flickr.com/services/rest/</EndPoint>
+    			<Arguments>
+    				<Argument>
+    					<Name>user_id</Name>
+    					<Value>90388533@N00</Value>
+    				</Argument>
+    				<Argument>
+    					<Name>api_key</Name>
+    					<Value>46535897d28aa09d15017d0724ca7ee0</Value>
+    				</Argument>
+    				<Argument>
+    					<Name>format</Name>
+    					<Value>json</Value>
+    				</Argument>
+    				<Argument>
+    					<Name>method</Name>
+    					<Value>flickr.people.getPublicPhotos</Value>
+    				</Argument>
+    				<Argument>
+    					<Name>nojsoncallback</Name>
+    					<Value>1</Value>
+    				</Argument>
+    			</Arguments>
+    		</Source>
+    	</Sources>
+    	<Renderers>
+    		<Renderer id="interesting" default="true">renderInteresting</Renderer>
+    		<Renderer id="favorites">renderFavorites</Renderer>
+    		<Renderer id="sets">renderSets</Renderer>
+    		<Renderer id="set">renderSet</Renderer>
+    		<Renderer id="photos">renderPhotos</Renderer>
+    		<Renderer id="photo">renderOnePhoto</Renderer>
+    		<Renderer id="thumb">renderThumb</Renderer>
+    		<Renderer id="small">renderSmall</Renderer>
+    	</Renderers>
+    	<Includes>
+    		<Include type="css">css/content-module.css</Include>
+    	</Includes>
+    </Module>
+</Page>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	    <title>Everett's Photo Gallery{title}</title>
+	    <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/combo?3.1.1/build/cssfonts/fonts-min.css&3.1.1/build/cssreset/reset-min.css&3.1.1/build/cssbase/base-min.css">
+
+	    <style type="text/css">
+	        body { 
+	            width : 950px; 
+	            margin : 0 auto; 
+	        }
+	        
+	        .main { 
+	            width : 100%; 
+	            height : 100%;
+	            position : relative;
+	        }
+	        
+	        .body {
+	            position : relative;
+	            height : 100%;
+	            width : 100%;
+	        }
+	        
+	        .mod-content {
+	            padding : 5px;
+	            border : 1px solid #ddd;
+	            margin : 10px 0 10px;
+	            position : relative;
+	        }
+	        
+	        .mod-content .mod-links {
+
+            }
+	        
+	        .clearfix {
+	            clear : both;
+	        }
+	        
+	        ul li {
+	            list-style-type : none;
+	            list-style-position : outside;
+	            list-style-image : none;
+	            
+	        }
+	        
+	        a, a:hover, a:visited {
+	        	color : #333;
+	        	text-decoration : none;
+	        }
+	        
+	        #dynamicContainer {
+	        	overflow : hidden;
+	        	width : 100%;
+	        }
+	        
+	    </style>
+	    {includeCSS}
+	</head>
+	<body>
+	    <div class="main">
+	        <div class="header">
+	            {module-header}
+	        </div>
+	        <div class="body">
+	        	<div id="dynamicContainer">
+	        		{module-content}
+	        	</div>
+	        </div>
+	        <div class="footer clearfix">
+	            {module-footer}	            
+	        </div>
+	    </div>
+	{includeJS}
+	</body>
+</html>
