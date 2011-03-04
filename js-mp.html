@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Javascript Module Platform</title>
+		<style type="text/css">
+			div { height : 100px; width : 100px; border : 1px solid #000; }
+		</style>
+	</head>
+	<body>
+	
+		<div id="module-1">container for module 1</div>
+
+		<div id="module-2">container for module 2</div>
+		
+		<script type="text/javascript">
+			var jsModule = {},                  // global object that will contain all the modules
+			    jsModuleRegistry = [];          // registry of the modules that will be part of the page
+
+
+            /**
+             * definition for module-1
+             * this module can be on a separate js file
+             */
+			jsModule["module-1"] = {
+			    /** the module id in html context */
+			    modID : "",
+			    
+			    /** the instance of the YUI 3 library */
+			    Y : {},
+			    
+			    /** the instance of the module api */
+			    moduleApi : {},
+			    
+			    /** instance for this to provide scope correction when events are invoked */
+			    _this : {}, 
+			
+			    /** 
+			     * implementation of the initModule interface
+			     * this interface is called when all modules are loaded
+			     * and the dom is ready
+			     *
+			     * @param : api {array} of objects
+			     *  api.moduleApi {object} the moduleApi sent back from the module platform
+			     *  api.Y   {object}    the YUI 3 instance sent back from the module platform
+			     */
+			    initModule : function(api){ 
+				    /** get the api objects */
+				    var Y = api.Y,                  // get the instance of Y and put in a local var
+				        moduleApi = api.moduleApi;  // get the instance of the moduleApi
+				        modID = api.modID;            // get the ID of the module
+				
+				    Y.log("Module 1 was initialized");
+				    
+				    /** extend the libraries and make a reference to this scope */
+				    this.Y = Y;
+				    this.Y.use("json");
+				
+				    this.moduleApi = moduleApi;
+				    this.modID = modID;
+				    
+				    _this = this;                   // reference of this
+			    },
+
+                /**
+                 * implementation of the onModuleLoad interface
+                 * this interface is called when all modules are initialized
+                 *
+                 * @param : moduleID {string} the id of the module in the html view
+                 */
+			    onModuleLoad : function(moduleID){
+				    this.Y.log("module 1 loaded");
+				    this.Y.on("click", this.handleClick, "#" + moduleID);
+			    },
+
+                /** 
+                 * implement the callback handler for the handleClick in the onModuleLoad
+                 *
+                 * @param : e {event} the event object
+                 */
+			    handleClick : function(e){
+			        e.preventDefault();
+			        
+				    // call refreshModule and send information on how to refresh the view
+				    //_this.moduleApi.refreshModule(e.currentTarget.getAttribute("id"));
+				    //_this.moduleApi.refreshModule(_this.modID);
+				    _this.Y.moduleApi.refreshModule(_this.modID);
+			    }
+
+			};
+
+
+			
+			jsModule["module-2"] = {
+				Y : {},
+				
+				initModule : function(api){
+					// initialize the Y
+					var Y = api.Y;
+					Y.log("Module 2 was initialized");
+					this.Y = Y;
+				},
+
+				onModuleLoad : function(){
+					alert("module load 2");	 
+				}
+			};
+
+			
+			jsModule["module-3"] = {};
+
+
+			
+		</script>
+		<script type="text/javascript" src="http://yui.yahooapis.com/combo?3.1.1/build/yui/yui-debug.js&3.1.1/build/dump/dump-debug.js"></script>
+		<script type="text/javascript">
+		    YUI.add("jsPlatform", function(Y){
+		        /** moduleApi **/
+		        Y.namespace("moduleApi");
+		        
+		        /**
+		         * TODO : Make this a low level call
+		         * refreshModule method refreshes the module via AJAX
+		         *
+		         * @params
+		         *  moduleID {string} the id of the module in the html context
+		         *  args {array} when present, the method will use to override the
+		         *      default values for the request config object
+		         */
+		        Y.moduleApi.refreshModule = function(moduleID, args){
+		            if(!args){
+		                var handler = {
+		                        method : "GET",
+		                        on : {
+		                            succes : function(id, o){
+		                                Y.log("transaction successful " + o.responseText);
+		                                var currentModule = document.getElementById(moduleID);
+		                                currentModule.innerHTML = o.responseText;
+		                            },
+		                            failure : function(id, o){
+		                                Y.log("transaction failed " + o.responseText);
+		                            }
+		                        }
+		                    },
+		                    config = {
+		                        url : encodeURI("?p=" + moduleID) 
+		                    },
+		                    data = {}
+		            }
+		            else {
+		                var handler = args.handler,
+		                    config = args.config,
+		                    data = args.data;
+		            }
+		            
+		            var request = Y.io(config.url, handler);
+		        };
+		        /** moduleApi */
+		        
+		        /** utils */
+		        /** utils */
+		        
+		    }, {requires : ["base", "io"]});
+		    
+		    
+		    var moduleApi = {
+		        /**
+		         * use the Y.moduleApi call here - this should focus on functionality rather than the implementation of AJAX
+		         */
+		        refreshModule : function(moduleID, args){
+		            alert("refreshing Module "  + moduleID);
+		            Y.moduleApi.refreshModule(moduleID);
+		        },
+		        
+		    }
+		    
+		    //moduleApi.refreshModule("testing");
+		    
+			YUI().use("node", "jsPlatform", "io",
+					function(Y){
+					
+					    //Y.moduleApi.refreshModule("testing");
+					    function signal(o, func, args){
+						    func.apply(o, args);
+						}
+						
+                       //Y.moduleApi.refreshModule("testing");
+
+					    function initModules(){
+					        Y.log("initializing the modules");
+
+							var jsMod = jsModule, jsReg = jsModuleRegistry;
+
+							// initialize each module and pass the Y api
+							Y.each(jsMod, function(modObject, modID){
+							    if(!modObject.initModule){
+							        Y.log("initModfule for " + modID + " was not implemented");
+							    }
+							    else {
+							        try{
+							            signal(modObject, modObject.initModule, [{"moduleApi" : moduleApi, "Y" : Y, "modID" : modID}]);
+							        }
+							        catch(ex){
+							            Y.log("Error caught in initModule for " + modID + " : " + ex.description);
+							        }
+							    }
+							    
+							});
+                            
+							// signal module load
+							Y.each(jsMod, function(modObject, modID){
+							    if(!modObject.onModuleLoad){
+							        Y.log("onModuleLoad for " + modID + " was not implemented");
+							    }
+							    else {
+							        try{
+							            signal(modObject, modObject.onModuleLoad, [modID]);
+							        }
+							        catch(ex){
+							            Y.log("Error caught in onModuleLoad for " + modID + " : " + ex.description);
+							        }
+							    }
+							});
+					    };
+					    
+					    
+					    // initialize all registered modules 
+						Y.on("domready", initModules);
+					});
+		
+		</script>
+	</body>
+</html>
+

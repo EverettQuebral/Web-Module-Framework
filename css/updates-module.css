@@ -1,0 +1,22 @@
+.module-2 ul {
+    width : 97%;
+    margin : 0 auto;
+    padding : 5px;
+    border : 1px solid #ddd;
+}
+
+.module-2 ul li {
+    margin : 0px;
+    margin-bottom : 10px;
+    background-color : #ddd;
+    padding : 5px;
+    text-align : center;
+}
+
+.module-2 .mod-links {
+    position : relative;
+}
+
+
+
+
