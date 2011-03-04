@@ -22,6 +22,6 @@ THE SOFTWARE.
  
  
 Web Module Framework
-is an Model-View-Controller (MVC) Framework written in PHP and YUI3
+is a Model-View-Controller (MVC) Framework written in PHP and YUI3
  
 @author: Everett Quebral
