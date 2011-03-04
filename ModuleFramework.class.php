@@ -1,6 +1,4 @@
 <?php
-require_once("Utility.class.php");
-
 /**
  * ModuleFramework
  * this class will handle all the modules
@@ -30,6 +28,8 @@ require_once("Utility.class.php");
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+require_once("Utility.class.php");
  
 class ModuleFramework {
     
