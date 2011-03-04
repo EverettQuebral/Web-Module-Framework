@@ -1,13 +1,5 @@
 <?php
 /**
- * The Base Module class
- * 
- * I'd like to implement this as an Abstract Class
- * but at the same time I want to user to just use this class
- * as a Default Module to provide RAPID testing
- * 
- * @author: Everett Quebral
- * 
  * 
  * The MIT License
  * 
@@ -30,6 +22,16 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
+ * 
+ * 
+ * The Base Module class
+ * 
+ * I'd like to implement this as an Abstract Class
+ * but at the same time I want to user to just use this class
+ * as a Default Module to provide RAPID testing
+ * 
+ * @author: Everett Quebral
+ * 
  */
 
 require_once("Curl.class.php");

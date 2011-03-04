@@ -1,11 +1,5 @@
 <?php
 /**
- * ModuleFramework
- * this class will handle all the modules
- * 
- * @author: Everett Quebral
- * 
- * 
  * The MIT License
  * 
  * Copyright (c) 2011 Everett Quebral Everett.Quebral@gmail.com
@@ -27,6 +21,14 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
+ * 
+ * 
+ * ModuleFramework
+ * this class will handle all the modules
+ * 
+ * @author: Everett Quebral
+ * 
+ * 
  */
 
 require_once("Utility.class.php");
