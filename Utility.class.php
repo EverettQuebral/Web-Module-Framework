@@ -40,31 +40,51 @@ class Utility {
 //		return "<a id=\"{$modId}-{$rendererId}\" {$class} href=\"?x=$saltedId\">{$text}</a>";
 //	}
 	
+	/**
+	 * create a link 
+	 * 
+	 * @param {string} $modId
+	 * @param {string} $url
+	 * @param {string} $text
+	 * @param {string} $class
+	 */
 	public static function createLink($modId, $url = array(), $text, $class=""){
-
 		$rendererId = $url[$modId]["rendererId"];
 		$url = "?" . http_build_query($url);
 		return "<a id=\"{$modId}-{$rendererId}\" {$class} href=\"{$url}\">{$text}</a>";
 	}
 	
+	/**
+	 * encode a string to base 64
+	 * @param {string} $string
+	 */
 	public static function encrypt($string){
 		$time = microtime();
-		//return sha1($string . "|" . $time);
 		return base64_encode($string . "|" . $time);
 	}
 	
+	/**
+	 * decode a base 64 string
+	 * @param {string} $encryptedString
+	 */
 	public static function decrypt($encryptedString){
 		$string = base64_decode($encryptedString);
 		$string = explode('|', $string);
-		//error_log($string[0]);
 		return $string[0];
-		
 	}
 	
+	/**
+	 * a pretty error log
+	 * @param {string} $string
+	 */
 	public static function logError($string){
 		error_log(print_r($string, true));
 	}
 	
+	/**
+	 * just do a nice print out of the object
+	 * @param {object} $object
+	 */
 	public static function printNice($object){
 		echo "<pre>" . print_r($object) . "</pre>";
 	}
@@ -82,6 +102,12 @@ class Utility {
 		return $retVal;
 	}
 	
+	/**
+	 * TODO:: needs to re-write this
+	 * 
+	 * @param unknown_type $available_languages
+	 * @param unknown_type $http_accept_language
+	 */
 	public static function getPreferedLanguage($available_languages, $http_accept_language="auto"){
 		// if $http_accept_language was left out, read it from the HTTP-Header
 	    if ($http_accept_language == "auto") $http_accept_language = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
