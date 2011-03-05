@@ -26,8 +26,55 @@
  * @author: Everett Quebral
  * 
  * TODO:: needs to support MultiCurl
+ * 
  */
 class Connection {
+	
+	/** handler for the curl requests **/
+	protected $curlHanlder = array();
+	
+	/** results **/
+	protected $results = array();
+	
+	/** the curl multi handler **/
+	protected $mhHandler;
+	
+	public function __constructor(){
+		$this->mhHandler = curl_multi_init();
+	}
+	
+	public function addCurl($id, $endPoint,  $args){
+		$this->curlHandler[$id] = curl_init($endPoint);
+		curl_setopt($this->curlHandler[$id], CURLOPT_CONNECTTIMEOUT, 2);
+	    curl_setopt($this->curlHandler[$id], CURLOPT_TIMEOUT, 60);
+	    curl_setopt($this->curlHandler[$id], CURLOPT_HEADER, false);
+	    curl_setopt($this->curlHandler[$id], CURLOPT_RETURNTRANSFER, true);
+	    curl_setopt($this->curlHandler[$id], CURLOPT_HTTPHEADER, array('Accept: application/json', 'Content-Type: application/x-www-form-urlencoded'));
+	    curl_setopt($this->curlHandler[$id], CURLOPT_POST, true);
+	    if($args !== ""){
+	        curl_setopt($this->curlHandler[$id], CURLOPT_POSTFIELDS, http_build_query($args));
+	    }
+	    curl_multi_add_handle($this->mhHandler, $this->curlHandler[$id]);
+	}
+	
+	public function execute(){
+		$running = null; 
+		
+        do{ 
+                curl_multi_exec($this->mhHandler,$running); 
+        } while($running > 0); 
+		
+		foreach($this->curlHandler as $chKey=>$chHandler){
+			$this->results[$chKey] = curl_multi_getcontent($chHandler);
+			curl_multi_remove_handle($this->mhHandler, $chHanlder);
+		}
+		curl_multi_close($this->mhHandler);
+	}
+	
+	public function getResult($id){
+		return $this->results[$id];
+	}
+	
     public static function getResult($endPoint, $args){
         error_log("Getting result from "  . $endPoint);
         error_log("With args " . print_r($args, true));
