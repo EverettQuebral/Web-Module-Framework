@@ -46,6 +46,7 @@ class Module {
     /** the container of the context variables for the module **/
     protected $context = array();		// module context
     
+    /** the title of the page **/
     protected $title = "";
 
     /**
@@ -60,11 +61,15 @@ class Module {
         Utility::logError("**********************************");
     }
     
-    /*
-    public function setData($data){
-    	$this->data = $data;
-    }
-    */
+  	/**
+  	 * interface
+  	 * this is the function that will be called by the framework to set the data to the module
+  	 * @param {object} $data
+  	 */  
+//    public function setData($data){
+//    	$this->data = $data;
+//    }
+    
     
     /**
      * interface
@@ -117,16 +122,15 @@ class Module {
 	 * @param {array} $override
 	 */
     protected function getUrl($override=null){
-    	// convert the $_REQUEST to array
-    	//return HttpQueryString::toArray();
-    	
     	$temp = array($this->modId => $override);
-    	//Utility::printNice($temp);
     	$url = array_merge($_REQUEST, $temp);
-    	//Utility::printNice($url);
     	return $url;
     }
     
+    /**
+     * interface
+     * function that will be called by the framework to get the Title of the page
+     */
     public function getTitle(){
     	return $this->title;
     }
