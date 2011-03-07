@@ -28,10 +28,13 @@
  * TODO:: needs to support MultiCurl
  * 
  */
+
+require_once("Utility.class.php");
+
 class Connection {
 	
 	/** handler for the curl requests **/
-	protected $curlHanlder = array();
+	protected $curlHandler = array();
 	
 	/** results **/
 	protected $results = array();
@@ -39,11 +42,13 @@ class Connection {
 	/** the curl multi handler **/
 	protected $mhHandler;
 	
-	public function __constructor(){
+	public function __construct(){
 		$this->mhHandler = curl_multi_init();
+		error_log("Initialized curl");
 	}
 	
 	public function addCurl($id, $endPoint,  $args){
+		Utility::logError("ID " . $id . " : EndPoint = " . $endPoint . " : Args " . print_r($args, true));
 		$this->curlHandler[$id] = curl_init($endPoint);
 		curl_setopt($this->curlHandler[$id], CURLOPT_CONNECTTIMEOUT, 2);
 	    curl_setopt($this->curlHandler[$id], CURLOPT_TIMEOUT, 60);
@@ -65,8 +70,9 @@ class Connection {
         } while($running > 0); 
 		
 		foreach($this->curlHandler as $chKey=>$chHandler){
+			error_log(print_r($chHandler, true));
 			$this->results[$chKey] = curl_multi_getcontent($chHandler);
-			curl_multi_remove_handle($this->mhHandler, $chHanlder);
+			curl_multi_remove_handle($this->mhHandler, $chHandler);
 		}
 		curl_multi_close($this->mhHandler);
 	}
