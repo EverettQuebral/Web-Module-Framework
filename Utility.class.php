@@ -31,15 +31,6 @@
  */
 
 class Utility {
-//	public static function createLink($modId, $rendererId, $text, $class=""){
-//		$class = $class == "" ? "" : "class = " . $class; 
-//		$saltedId = Utility::encrypt("moduleId={$modId}&rendererId={$rendererId}");
-//		
-//		//error_log("Salted " . $saltedId);
-//		//error_log("Unsalted " . Utility::decrypt($saltedId));
-//		return "<a id=\"{$modId}-{$rendererId}\" {$class} href=\"?x=$saltedId\">{$text}</a>";
-//	}
-	
 	/**
 	 * create a link 
 	 * 
