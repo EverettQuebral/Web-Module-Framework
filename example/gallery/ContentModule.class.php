@@ -31,7 +31,7 @@
  * 
  */
 
-require_once("../wmf/Module.class.php");
+require_once("Module.class.php");
 
 class ContentModule extends Module {
     protected $photos;

@@ -1,5 +1,5 @@
 <?php
-require_once("../wmf/Module.class.php");
+require_once("Module.class.php");
 
 class HeaderModule extends Module {
     public function __construct($modId){

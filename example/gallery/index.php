@@ -4,7 +4,7 @@
  * landing point for the MVC Platform
  */
  
-require_once("../wmf/ModuleFramework.class.php");
+require_once("ModuleFramework.class.php");
 
 $langs = array(
 	'en-us',
