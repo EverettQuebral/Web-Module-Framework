@@ -109,6 +109,21 @@ class ModuleFramework {
      */
     private $url = array();					// this is implemented in the Module.class.php
     
+    /**
+     * the data sources 
+     * 
+     * @var {array}
+     */
+    private $sources = array();
+
+    /**
+     * The connection class
+     * Enter description here ...
+     * @var {Connection}
+     */
+    private $connection;
+    
+    
     
     /**
      * constructor
@@ -132,6 +147,7 @@ class ModuleFramework {
         }
         
         $this->moduleDefinition = simplexml_load_file($moduleFile);
+        $this->connection = new Connection();
     }
     
     /**
@@ -162,6 +178,7 @@ class ModuleFramework {
      *  array of objects that will hold the modules context
      */
     private function processSource($moduleId, $source, $context=null){
+    	/*
     	$endPoint = (string) $source->EndPoint;
     	$args = array();
     	foreach($source->Arguments->Argument as $argument){
@@ -176,6 +193,8 @@ class ModuleFramework {
     	}
     	$result = Connection::getResult($endPoint, $args);
     	return json_decode($result, true);
+    	*/
+    	return json_decode($this->connection->getResult($moduleId), true);
     }
     
     /**
@@ -488,7 +507,56 @@ class ModuleFramework {
         return $template;    
     }
     
+    private function parseSources($moduleId='', $rendererId=''){
+    // parse the sources
+    	foreach($this->moduleDefinition->Module as $module){
+    		$moduleAttributes = Utility::getAttributes($module->attributes());
+    		$moduleId = $moduleAttributes["id"];
+    		
+    		$module = $this->moduleDefinition->xpath("//Page/Module[@id='".$moduleId ."']");
+    		
+    		if($rendererId !== ""){
+				$moduleSource = $module[0]->xpath("//Sources/Source[@bindTo='" . $rendererId . "']");
+				$moduleSource = $moduleSource[0];
+			}
+			else {
+				$moduleSource = $module[0]->Sources->Source;
+			}
+			
+			$endPoint = (string) $moduleSource->EndPoint;
+			$args = array();
+			foreach($moduleSource->Arguments->Argument as $argument){
+				$value = (string)$argument->Value;
+				if(substr($value, 0, 2) === '{$'){
+					$args[(string)$argument->Name] = $context[substr($value, 2, -1)];
+				}
+				else {
+					$args[(string)$argument->Name] = (string)$argument->Value;
+				}
+			}
+			
+			$this->connection->addCurl($moduleId, $endPoint, $args);
+    	}
+    }
+    
+    private function parseRenderers($moduleId='', $rendererId=''){
+    	
+    }
+    
+    /**
+     * Render the Page
+     *  - parse the modules so that all data source request can be processed using multi curl
+     *  - parse the renderers
+     *  
+     * @param unknown_type $encodedX
+     * @param unknown_type $moduleId
+     * @param unknown_type $rendererId
+     */
     public function renderPage($encodedX='', $moduleId='', $rendererId=''){
+    	$this->parseSources($moduleId, $rendereId);
+    	$this->connection->execute();
+    	
+    	// parse the renderers
     	foreach($this->moduleDefinition->Module as $module){
 			$moduleAttributes = Utility::getAttributes($module->attributes());
     		$moduleId = $moduleAttributes["id"];
