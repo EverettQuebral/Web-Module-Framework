@@ -74,7 +74,7 @@ class Connection {
 	public function getResult($id){
 		return $this->results[$id];
 	}
-	
+	/*
     public static function getResult($endPoint, $args){
         error_log("Getting result from "  . $endPoint);
         error_log("With args " . print_r($args, true));
@@ -106,5 +106,6 @@ class Connection {
 		    return false;
 	    }
     }
+    */
 }
 ?>

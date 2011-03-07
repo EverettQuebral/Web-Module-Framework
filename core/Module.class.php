@@ -31,7 +31,7 @@
  * @author: Everett Quebral
  * 
  */
-require_once("Curl.class.php");
+require_once("Connection.class.php");
 
 class Module {
 	/** the $modId is taken from the module definition .xml file **/
