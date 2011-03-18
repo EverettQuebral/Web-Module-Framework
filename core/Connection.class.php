@@ -48,6 +48,7 @@ class Connection {
 	}
 	
 	public function addCurl($id, $endPoint,  $args){
+		echo "Adding to curl " . $id . "<br />";
 		Utility::logError("ID " . $id . " : EndPoint = " . $endPoint . " : Args " . print_r($args, true));
 		$this->curlHandler[$id] = curl_init($endPoint);
 		curl_setopt($this->curlHandler[$id], CURLOPT_CONNECTTIMEOUT, 2);

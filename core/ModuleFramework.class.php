@@ -123,6 +123,8 @@ class ModuleFramework {
      */
     private $connection;
     
+    private $classes = array();
+    
     
     
     /**
@@ -596,6 +598,119 @@ class ModuleFramework {
         //Utility::logError("Renderer " . $moduleId);
         //Utility::logError($html);
         return $html;
+    }
+    
+    /**
+     * read the xml file and make it as an array
+     * 
+     */
+    private function prepareModules(){
+    	foreach($this->moduleDefinition->Module as $module){
+    		$modAttr = Utility::getAttributes($module->attributes());
+    		$modId = $modAttr["id"];
+    		
+    		echo "Parsing module " . $modId . "<br />";
+    		
+    		$this->modules[$modId] = array();
+    		$this->modules[$modId]["className"] = (string) $module[0]->Class;
+    		
+    		//get the renderer for the module
+			$rendererId = isset($_REQUEST[$modId]) ? $_REQUEST[$modId]["rendererId"] : "";
+    		
+    		if($rendererId !== ""){
+    			//get the context and set to the data
+    			$moduleSource = $module[0]->xpath("//Sources/Source[@bindTo='" . $rendererId . "']");
+    			$moduleSource = $moduleSource[0];
+    		}
+    		else {
+    			$moduleSource = $module[0]->Sources->Source;
+    		}
+
+    		$this->modules[$modId]["source"] = array();
+    		$this->modules[$modId]["source"]["endPoint"] = (string) $moduleSource->EndPoint;
+    		$args = array();
+    		foreach($moduleSource->Arguments->Argument as $argument){
+   				$args[(string)$argument->Name] = (string)$argument->Value;
+    		}
+    		$this->modules[$modId]["source"]["args"] = $args;
+    		
+    		if($rendererId !== ""){
+    			$renderer = $module[0]->xpath("//Renderers/Renderer[@id='" . $rendererId . "']");
+    		}
+    		else {
+    			$renderer = $module[0]->xpath("//Renderers/Renderer[@default='true']");	
+    		}
+    		
+    		$this->modules[$modId]["renderer"] = (string) $renderer[0];
+    	}
+    }
+    
+    private function prepareSources(){
+    	echo "<pre>";
+    	print_r($this->modules);
+    	echo "</pre>";
+    	
+    	foreach($this->modules as $moduleId=>$moduleValue){
+    		$classFileName = $moduleValue["className"] . ".class.php";
+    		echo $moduleId . "=>" . $moduleValue . "=>" . $classFileName . "<br/>";
+    		
+    		echo "<pre>";
+	    	print_r($moduleValue);
+	    	echo "</pre>";
+	    	
+    		if(file_exists($classFileName)){	
+	    		include_once($classFileName);
+	    		
+	    		$className = $moduleValue["className"];
+	    		$x = new $className($moduleId);
+	    		$x->init();
+	    		
+	    		$x->setContext($this->context[$moduleId]);
+	    		if(method_exists($className, 'setData')){
+	    			$args = array();
+	    			if(method_exists($className, 'getContext')){
+	    				foreach($moduleValue["source"]["args"] as $argsKey=>$argsValue){
+	    					if(substr($argsValue, 0, 1) === '{$'){
+	    						$args[$argsKey] = $x->getContext(substr($argsValue, 2, -1));
+	    					}
+	    				}
+	    			}
+	    			$this->connection->addCurl($moduleId, $moduleValue["source"]["endPoint"], $args);
+	    		}
+	    		
+	    		echo "Adding to class " . $moduleId . "<br />";
+	    		$this->classes[$moduleId] = $x;
+    		}
+    	}
+    }
+    
+    private function prepareRenderer(){
+    	echo "<pre>";
+    	print_r($this->classes);
+    	echo "</pre>";
+    	
+    	foreach($this->classes as $key=>$class){
+    	 	print_r($key);
+    		//echo $class->{$this->modules[$moduleId]->renderer}();
+    		echo $class->renderDefault();
+    	 	//$this->modules[$moduleId]["renderer"] = $class->{$this->modules[$moduleId]->renderer}();
+    	}
+    }
+    
+    
+    /**
+     * render the whole page
+     * 
+     * 1. initialize all the modules
+     * 2. set all the context
+     * 3. set all the sources -> all sources should execute all the curl request before calling render
+     * 4. render the modules
+     * 5. render the page
+     */
+    public function render(){
+    	$this->prepareModules();
+    	$this->prepareSources();
+    	$this->prepareRenderer();
     }
 }
 

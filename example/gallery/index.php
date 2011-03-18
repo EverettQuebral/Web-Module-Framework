@@ -22,7 +22,8 @@ $mvcP = new ModuleFramework('index.html');
 
 error_log("**** this is the path " . $_SERVER["DOCUMENT_ROOT"] . "/gallery/lang/");
 $mvcP->setLanguage($langs, $_SERVER["DOCUMENT_ROOT"] . "/gallery/lang/");
-echo $mvcP->renderPage();
+//echo $mvcP->renderPage();
+echo $mvcP->render();
 //$mvcP->renderPage($_REQUEST);
 
 // if $_REQUEST["x"] the use it, if not use the moduleId

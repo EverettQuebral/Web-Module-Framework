@@ -88,8 +88,13 @@ class Module {
 	 * 
 	 * @param unknown_type $context
 	 */
-	public function getContext(){
-		return $this->context;
+	public function getContext($key=""){
+		if(!$key){
+			return $this->context;
+		}
+		else {
+			return $this->context[$key];
+		}
 	}
     
     /** 
