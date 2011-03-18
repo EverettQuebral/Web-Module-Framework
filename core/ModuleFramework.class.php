@@ -691,10 +691,20 @@ class ModuleFramework {
     	
     	foreach($this->classes as $key=>$class){
     	 	print_r($key);
+    	 	$renderer = (string)$this->modules[$key]["renderer"];
+    	 	echo $renderer;
+    	 	$this->modules[$key]["markup"] = $class->{$renderer}();
     		//echo $class->{$this->modules[$moduleId]->renderer}();
-    		echo $class->renderDefault();
     	 	//$this->modules[$moduleId]["renderer"] = $class->{$this->modules[$moduleId]->renderer}();
     	}
+    }
+    
+    private function replaceMarkup($template){
+		foreach($this->modules as $k => $v){
+            $template = str_replace('{' . $k . '}', $v["markup"], $template);
+        }
+     
+        return $template;
     }
     
     
@@ -711,6 +721,14 @@ class ModuleFramework {
     	$this->prepareModules();
     	$this->prepareSources();
     	$this->prepareRenderer();
+    	
+    	// get the template and replace the strings
+        $template = file_get_contents($this->templateFile);
+        
+        $template = $this->replaceMarkup($template);
+        //$template = $this->addIncludes($template);
+        //$template = str_replace('{title}', $this->title, $template);
+        return $template;
     }
 }
 
