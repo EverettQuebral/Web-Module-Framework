@@ -4,7 +4,7 @@
  * landing point for the MVC Platform
  */
  
-require_once("ModuleFramework.class.php");
+require_once("../../core/ModuleFramework.class.php");
 
 
 $mvcP = new ModuleFramework('index.html');

@@ -31,7 +31,7 @@
     			<Arguments>
     				<Argument>
     					<Name>q</Name>
-    					<Value>select * from flickr.photos.interestingness(21)</Value>
+    					<Value>select * from flickr.photos.interestingness(21) where api_key=46535897d28aa09d15017d0724ca7ee0</Value>
     				</Argument>
     				<Argument>
     					<Name>format</Name>
@@ -49,7 +49,7 @@
     			<Arguments>
     				<Argument>
     					<Name>q</Name>
-    					<Value>select * from flickr.photos.interestingness(21)</Value>
+    					<Value>SELECT * FROM flickr.groups.pools.photos(0,21) WHERE group_id='65248419@N00' AND extras='url_sq' and api_key=46535897d28aa09d15017d0724ca7ee0</Value>
     				</Argument>
     				<Argument>
     					<Name>format</Name>
@@ -167,6 +167,7 @@
     				</Argument>
     			</Arguments>
     		</Source>
+			<!--
 			<Source id="photos" bindTo="photos">
     			<EndPoint>http://api.flickr.com/services/rest/</EndPoint>
     			<Arguments>
@@ -192,6 +193,7 @@
     				</Argument>
     			</Arguments>
     		</Source>
+			-->
     	</Sources>
     	<Renderers>
     		<Renderer id="interesting" default="true">renderInteresting</Renderer>

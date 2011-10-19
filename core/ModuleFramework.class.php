@@ -517,23 +517,28 @@ class ModuleFramework {
     		
     		$module = $this->moduleDefinition->xpath("//Page/Module[@id='".$moduleId ."']");
     		
+			// if the renderer is not empty
     		if($rendererId !== ""){
 				$moduleSource = $module[0]->xpath("//Sources/Source[@bindTo='" . $rendererId . "']");
 				$moduleSource = $moduleSource[0];
 			}
+			// just get the default source
 			else {
 				$moduleSource = $module[0]->Sources->Source;
 			}
 			
 			$endPoint = (string) $moduleSource->EndPoint;
 			$args = array();
-			foreach($moduleSource->Arguments->Argument as $argument){
-				$value = (string)$argument->Value;
-				if(substr($value, 0, 2) === '{$'){
-					$args[(string)$argument->Name] = $context[substr($value, 2, -1)];
-				}
-				else {
-					$args[(string)$argument->Name] = (string)$argument->Value;
+			
+			if($moduleSource->Arguments->Argument){
+				foreach($moduleSource->Arguments->Argument as $argument){
+					$value = (string)$argument->Value;
+					if(substr($value, 0, 2) === '{$'){
+						$args[(string)$argument->Name] = $context[substr($value, 2, -1)];
+					}
+					else {
+						$args[(string)$argument->Name] = (string)$argument->Value;
+					}
 				}
 			}
 			
@@ -609,16 +614,18 @@ class ModuleFramework {
     		$modAttr = Utility::getAttributes($module->attributes());
     		$modId = $modAttr["id"];
     		
-    		echo "Parsing module " . $modId . "<br />";
-    		
+			// create an array for the modules
     		$this->modules[$modId] = array();
+			
+			// set the modules php class name
     		$this->modules[$modId]["className"] = (string) $module[0]->Class;
     		
-    		//get the renderer for the module
+    		// get the renderer for the module
 			$rendererId = isset($_REQUEST[$modId]) ? $_REQUEST[$modId]["rendererId"] : "";
-    		
+			
     		if($rendererId !== ""){
-    			//get the context and set to the data
+    			// get the context and set to the data
+				//error_log("Renderer id " . $rendererId);
     			$moduleSource = $module[0]->xpath("//Sources/Source[@bindTo='" . $rendererId . "']");
     			$moduleSource = $moduleSource[0];
     		}
@@ -626,14 +633,20 @@ class ModuleFramework {
     			$moduleSource = $module[0]->Sources->Source;
     		}
 
+			// set the endpoints
     		$this->modules[$modId]["source"] = array();
     		$this->modules[$modId]["source"]["endPoint"] = (string) $moduleSource->EndPoint;
     		$args = array();
-    		foreach($moduleSource->Arguments->Argument as $argument){
-   				$args[(string)$argument->Name] = (string)$argument->Value;
-    		}
-    		$this->modules[$modId]["source"]["args"] = $args;
-    		
+
+			// set the arguments
+			if($moduleSource->Arguments->Argument){
+    			foreach($moduleSource->Arguments->Argument as $argument){
+	   				$args[(string)$argument->Name] = (string)$argument->Value;
+	    		}
+	    		$this->modules[$modId]["source"]["args"] = $args;
+			}
+		
+			// set the renderer
     		if($rendererId !== ""){
     			$renderer = $module[0]->xpath("//Renderers/Renderer[@id='" . $rendererId . "']");
     		}
@@ -642,58 +655,71 @@ class ModuleFramework {
     		}
     		
     		$this->modules[$modId]["renderer"] = (string) $renderer[0];
+			$this->modules[$modId]["rendererId"] = $rendererId;
+			$this->context[$modId] = array("rendererId"=>$rendererId);
+			
+			$this->parseIncludes($module);
     	}
     }
     
+	/**
+	 * function that will prepare all the sources for the module
+	 */
     private function prepareSources(){
-    	echo "<pre>";
-    	print_r($this->modules);
-    	echo "</pre>";
-    	
     	foreach($this->modules as $moduleId=>$moduleValue){
     		$classFileName = $moduleValue["className"] . ".class.php";
-    		echo $moduleId . "=>" . $moduleValue . "=>" . $classFileName . "<br/>";
     		
-    		echo "<pre>";
-	    	print_r($moduleValue);
-	    	echo "</pre>";
-	    	
+			//echo $moduleId . "=>" . $moduleValue . "=>" . $classFileName . "<br/>";
     		if(file_exists($classFileName)){	
 	    		include_once($classFileName);
 	    		
+				// instantiate the module
 	    		$className = $moduleValue["className"];
 	    		$x = new $className($moduleId);
 	    		$x->init();
 	    		
+				// set the context to the module
 	    		$x->setContext($this->context[$moduleId]);
+	
+				// if the module implments the setData method then call it
 	    		if(method_exists($className, 'setData')){
-	    			$args = array();
+					$args = array();
 	    			if(method_exists($className, 'getContext')){
-	    				foreach($moduleValue["source"]["args"] as $argsKey=>$argsValue){
-	    					if(substr($argsValue, 0, 1) === '{$'){
-	    						$args[$argsKey] = $x->getContext(substr($argsValue, 2, -1));
-	    					}
-	    				}
+						if($moduleValue["source"]["args"]){
+							foreach($moduleValue["source"]["args"] as $argsKey=>$argsValue){
+								if(substr($argsValue, 0, 2) === '{$'){
+									$args[$argsKey] = $x->getContext(substr($argsValue, 2, -1));
+								}
+								else {
+									$args[$argsKey] = $argsValue;
+								}
+		    				}
+						}
 	    			}
 	    			$this->connection->addCurl($moduleId, $moduleValue["source"]["endPoint"], $args);
 	    		}
 	    		
-	    		echo "Adding to class " . $moduleId . "<br />";
 	    		$this->classes[$moduleId] = $x;
     		}
     	}
     }
     
-    private function prepareRenderer(){
-    	echo "<pre>";
-    	print_r($this->classes);
-    	echo "</pre>";
+    private function prepareRenderer(){	
+		// now execute all curl request
+		$this->connection->execute();
     	
     	foreach($this->classes as $key=>$class){
-    	 	print_r($key);
+			// get the renderer method
     	 	$renderer = (string)$this->modules[$key]["renderer"];
-    	 	echo $renderer;
+			
+			// set the data for the module
+			if(method_exists($class, 'setData')){
+				$class->setData($this->connection->getResult($key));
+			}
+			
+			// execute the renderer and put the html to the markup
     	 	$this->modules[$key]["markup"] = $class->{$renderer}();
+			
     		//echo $class->{$this->modules[$moduleId]->renderer}();
     	 	//$this->modules[$moduleId]["renderer"] = $class->{$this->modules[$moduleId]->renderer}();
     	}
@@ -726,8 +752,8 @@ class ModuleFramework {
         $template = file_get_contents($this->templateFile);
         
         $template = $this->replaceMarkup($template);
-        //$template = $this->addIncludes($template);
-        //$template = str_replace('{title}', $this->title, $template);
+        $template = $this->addIncludes($template);
+        $template = str_replace('{title}', $this->title, $template);
         return $template;
     }
 }

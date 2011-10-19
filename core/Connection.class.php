@@ -48,8 +48,6 @@ class Connection {
 	}
 	
 	public function addCurl($id, $endPoint,  $args){
-		echo "Adding to curl " . $id . "<br />";
-		Utility::logError("ID " . $id . " : EndPoint = " . $endPoint . " : Args " . print_r($args, true));
 		$this->curlHandler[$id] = curl_init($endPoint);
 		curl_setopt($this->curlHandler[$id], CURLOPT_CONNECTTIMEOUT, 2);
 	    curl_setopt($this->curlHandler[$id], CURLOPT_TIMEOUT, 60);
@@ -64,10 +62,11 @@ class Connection {
 	}
 	
 	public function execute(){
+		error_log("executing all curl request");
 		$running = null; 
 		
         do{ 
-                curl_multi_exec($this->mhHandler,$running); 
+			curl_multi_exec($this->mhHandler,$running); 
         } while($running > 0); 
 		
 		foreach($this->curlHandler as $chKey=>$chHandler){
@@ -79,7 +78,7 @@ class Connection {
 	}
 	
 	public function getResult($id){
-		return $this->results[$id];
+		return json_decode($this->results[$id], true);
 	}
 	/*
     public static function getResult($endPoint, $args){

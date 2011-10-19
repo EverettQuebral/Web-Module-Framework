@@ -31,7 +31,8 @@
  * 
  */
 
-require_once("Module.class.php");
+require_once("../../core/Module.class.php");
+require_once("../../core/Utility.class.php");
 
 class ContentModule extends Module {
     protected $photos;
@@ -59,14 +60,14 @@ class ContentModule extends Module {
      */
     public function setContext($context){
    		parent::setContext($context);
-   		
    		// this is a test only, this needs to be removed
-   		//$this->context["testingVariable"] = "someValue";
+   		$this->context["testingVariable"] = "this is a value that needs to be set in the module";
+
    		$this->context["photosetId"] = $_REQUEST[$this->modId]["photosetId"];
     }
     
-    public function setData($data){
-    	switch($this->context["rendererId"]){
+    public function setData($data){	
+		switch($this->context["rendererId"]){
     		case "sets" : 
     			$this->data = $data["photosets"]["photoset"];
     			$this->pages = $data["photosets"]["photoset"]["pages"];
@@ -83,7 +84,7 @@ class ContentModule extends Module {
     			$this->perPage = $data["photos"]["perpage"];
     			break;
     		default : 
-    			$this->data = $data["query"]["results"]["photo"];
+				$this->data = $data["query"]["results"]["photo"];
     			break;
     	}
     }
@@ -97,31 +98,31 @@ class ContentModule extends Module {
     	$this->smallLink = Utility::createLink(
     									$this->modId, 
     									$this->getUrl(array("rendererId"=>"small")), 
-    									$this->strings["small"]);
+    									"SMALL");//$this->strings["small"]);
     	$this->thumbLink = Utility::createLink(
     									$this->modId, 
     									$this->getUrl(array("rendererId"=>"thumb")), 
-    									$this->strings["thumb"]);
+    									"THUMB");//$this->strings["thumb"]);
     	$this->interestingLink = Utility::createLink(
     									$this->modId, 
     									$this->getUrl(array("rendererId"=>"interesting")), 
-    									$this->strings["interesting"], "right-divider");
+    									"INTERESTING");//$this->strings["interesting"], "right-divider");
     	$this->favoritesLink = Utility::createLink(
     									$this->modId, 
     									$this->getUrl(array("rendererId"=>"favorites")), 
-    									$this->strings["favorites"], "right-divider");
+    									"FAVORITES");//$this->strings["favorites"], "right-divider");
     	$this->setsLink = Utility::createLink(
     									$this->modId, 
     									$this->getUrl(array("rendererId" => "sets")), 
-    									$this->strings["sets"], "right-divider");
+    									"SETS");//$this->strings["sets"], "right-divider");
     	$this->photosLink = Utility::createLink(
     									$this->modId, 
     									$this->getUrl(array("rendererId"=>"photos")), 
-    									$this->strings["photos"], "right-divider");
+    									"PHOTOS");//$this->strings["photos"], "right-divider");
     	$this->aboutMeLink = Utility::createLink(
     									$this->modId, 
     									$this->getUrl(array("rendererId" => "aboutMe")), 
-    									$this->strings["aboutMe"], "right left-divider");	
+    									"ABOUT ME");//$this->strings["aboutMe"], "right left-divider");	
     }
     
     private function renderPhoto($photo, $size="m"){
@@ -133,7 +134,7 @@ class ContentModule extends Module {
     	$size = $count == 9 ? "m" : "s"; 
     	////echo "<pre>". print_r($this->data) . "</pre>";
     	$posts = "<ul class=\"photoset\">";
-
+		
     	foreach($this->data as $photo){
     		//echo "<pre>". print_r($photo) . "</pre>";
     		$title = $photo["title"];
@@ -165,6 +166,16 @@ class ContentModule extends Module {
     														"title"=>$photo["title"])),
     												$photo["title"]);
     				break;
+				case "favorites" :
+    				$linkTitle = Utility::createLink($this->modId, 
+    												$this->getUrl(array("rendererId"=>"photo",
+    														"farm"=>$photo["farm"],
+    														"server"=>$photo["server"],
+    														"id"=>$photo["id"],
+    														"secret"=>$photo["secret"],
+    														"title"=>$photo["title"])),
+    												$photo["title"]);
+    				break;
     			case "set"	:
     				//$linkTitle = "<a href=\"{$currentPhoto}\">{$photo["title"]}</a>{$fbIframe}";
     				$linkTitle = Utility::createLink($this->modId, 
@@ -174,7 +185,7 @@ class ContentModule extends Module {
     														"id"=>$photo["id"],
     														"secret"=>$photo["secret"],
     														"title"=>$photo["title"])),
-    												$photo["title"]) . $fbIframe;
+    												$photo["title"]);
     				break;
     			case "photos" :
 					//$linkTitle = "<a href=\"{$currentPhoto}\">{$title}</a>{$fbIframe}";
@@ -185,7 +196,7 @@ class ContentModule extends Module {
     														"id"=>$photo["id"],
     														"secret"=>$photo["secret"],
     														"title"=>$photo["title"])),
-    												$photo["title"]) . $fbIframe;
+    												$photo["title"]);
     				break;
     			case "renderOnePhoto" :
     				//$linkTitle = 
@@ -218,6 +229,7 @@ HTML;
     }
     
     private function renderModuleLinks(){
+		$this->setLinks();
     	$html = <<<HTML
 			<ul class="menu">
 				<li class="right-divider">{$this->interestingLink}</li>
@@ -244,6 +256,7 @@ HTML;
      * display the list in thumb size and grid layout
      */
     public function renderDefault(){
+		Utility::logError("render Default called in " . __class__);
         return $this->renderThumb();
     }
     
@@ -269,7 +282,8 @@ HTML;
     public function renderThumb($isGrid = true){
     	return <<<HTML
     		<div id="{$this->modId}" class="{$this->modId} mod-content thumb">
-    			{$this->renderModuleLinks()}
+				<div class="hd">{$this->renderModuleLinks()}</div>
+				<div class="bd">{$this->createList(9)}</div>
     		</div> 
 HTML;
     }

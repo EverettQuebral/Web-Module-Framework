@@ -28,6 +28,7 @@
             <Include type="js">js/weather-module.js</Include>
         </Includes>
     </Module>
+<!--
     <Module id="module-2">
         <Class>UpdatesModule</Class>
         <Sources>
@@ -54,6 +55,7 @@
             <Include type="js">js/updates-module.js</Include>
         </Includes>
     </Module>
+-->
     <Module id="module-ads">
         <Class>AdsModule</Class>
         <Renderers>

@@ -1,5 +1,5 @@
 <?php
-require_once("Module.class.php");
+require_once("../../core/Module.class.php");
 
 class AdsModule extends Module {
 

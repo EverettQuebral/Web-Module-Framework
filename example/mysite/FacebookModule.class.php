@@ -1,6 +1,6 @@
 <?php
-require_once("Module.class.php");
-require_once("../facebook-0.1.0/facebook.php");
+require_once("../../core/Module.class.php");
+require_once("facebook-0.1.0/facebook.php");
 
 class FacebookModule extends Module {
     public function __construct($modId){

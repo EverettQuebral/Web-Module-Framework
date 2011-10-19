@@ -1,7 +1,7 @@
 <?php
 
-require_once("Module.class.php");
-require_once("IDataModule.interface.php");
+require_once("../../core/Module.class.php");
+require_once("../../core/IDataModule.class.php");
 
 class WeatherModule extends Module implements IDataModule {
     

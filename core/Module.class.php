@@ -88,7 +88,7 @@ class Module {
 	 * 
 	 * @param unknown_type $context
 	 */
-	public function getContext($key=""){
+	public final function getContext($key=""){
 		if(!$key){
 			return $this->context;
 		}
@@ -127,9 +127,10 @@ class Module {
 	 * @param {array} $override
 	 */
     protected function getUrl($override=null){
+		$url = array("modId" => $this->modId);
     	$temp = array($this->modId => $override);
-    	$url = array_merge($_REQUEST, $temp);
-    	return $url;
+		$temp = array_merge($url, $temp);
+		return $temp;
     }
     
     /**

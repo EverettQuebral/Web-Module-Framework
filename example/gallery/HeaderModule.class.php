@@ -1,5 +1,5 @@
 <?php
-require_once("Module.class.php");
+require_once("../../core/Module.class.php");
 
 class HeaderModule extends Module {
     public function __construct($modId){
@@ -12,13 +12,23 @@ class HeaderModule extends Module {
     
     public function renderDefault(){
     	$link = "?" . http_build_query($this->getUrl(array("rendererId"=>"view-1")));
-        return <<<HTML
+        /*
+		return <<<HTML
             <div id="{$this->modId}" class="{$this->modId} mod-content">
                 <a href="{$link}">
                 	<h2>{$this->strings["title"]}</h2>
                 	<h3>{$this->strings["subTitle"]}</h3>
                 </a>
             </div>
+HTML;
+*/
+		return <<<HTML
+    		<div id="{$this->modId}" class="{$this->modId} mod-content">
+		        <a href="{$link}">
+		        	<h2>Everett Quebral</h2>
+		        	<h3>Gallery</h3>
+		        </a>
+		    </div>
 HTML;
     }
 }
