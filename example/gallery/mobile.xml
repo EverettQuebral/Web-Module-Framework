@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Page>
+	<Module id="module-content-mobile-interesting">
+    	<Class>ContentModule</Class>
+    	<Sources>
+    		<Source id="interesting" bindTo="mobile-interesting">
+    			<EndPoint>http://query.yahooapis.com/v1/public/yql</EndPoint>
+    			<Arguments>
+    				<Argument>
+    					<Name>q</Name>
+    					<Value>select * from flickr.photos.interestingness(21) where api_key=46535897d28aa09d15017d0724ca7ee0</Value>
+    				</Argument>
+    				<Argument>
+    					<Name>format</Name>
+    					<Value>json</Value>
+    				</Argument>
+    				<!-- this argument needs a dynamic value that will be passed by the framework -->
+    				<Argument>
+    					<Name>test</Name>
+    					<Value>{$testingVariable}</Value>
+    				</Argument>
+    			</Arguments>
+    		</Source>
+    	</Sources>
+    	<Renderers>
+			<Renderer id="mobile-interesting" default="true">renderMobileInteresting</Renderer>
+    	</Renderers>
+    </Module>
+	<Module id="module-content-mobile-favorites">
+    	<Class>ContentModule</Class>
+    	<Sources>
+    		<Source id="interesting" bindTo="mobile-favorites">
+    			<EndPoint>http://query.yahooapis.com/v1/public/yql</EndPoint>
+    			<Arguments>
+    				<Argument>
+    					<Name>q</Name>
+    					<Value>select * from flickr.photos.interestingness(21) where api_key=46535897d28aa09d15017d0724ca7ee0</Value>
+    				</Argument>
+    				<Argument>
+    					<Name>format</Name>
+    					<Value>json</Value>
+    				</Argument>
+    				<!-- this argument needs a dynamic value that will be passed by the framework -->
+    				<Argument>
+    					<Name>test</Name>
+    					<Value>{$testingVariable}</Value>
+    				</Argument>
+    			</Arguments>
+    		</Source>
+    	</Sources>
+    	<Renderers>
+			<Renderer id="mobile-favorites" default="true">renderMobileFavorites</Renderer>
+    	</Renderers>
+    </Module>
+    <Module id="module-header">
+        <Class>HeaderModule</Class>
+        <Renderers>
+            <Renderer id="view-1" default="true">renderMobile</Renderer>
+        </Renderers>
+    </Module>
+    <Module id="module-footer">
+    	<Class>FooterModule</Class>
+    	<Renderers>
+    		<Renderer id="view-1" default="true">renderMobile</Renderer>
+    	</Renderers>
+    </Module>
+
+</Page>
