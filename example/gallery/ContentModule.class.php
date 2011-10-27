@@ -125,9 +125,9 @@ class ContentModule extends Module {
     									"ABOUT ME");//$this->strings["aboutMe"], "right left-divider");	
     }
     
-    private function renderPhoto($photo, $size="m"){
+    private function renderPhoto($photo, $size="m", $class=""){
     	//http://farm3.static.flickr.com/2427/3722264533_6f9bde4143_m.jpg
-    	return "<img src=\"http://farm{$photo["farm"]}.static.flickr.com/{$photo["server"]}/{$photo["id"]}_{$photo["secret"]}_{$size}.jpg\">";
+    	return "<img src=\"http://farm{$photo["farm"]}.static.flickr.com/{$photo["server"]}/{$photo["id"]}_{$photo["secret"]}_{$size}.jpg\" class=\"" . $class . "\">";
     }
     
     private function createList($count=9){
@@ -150,53 +150,20 @@ class ContentModule extends Module {
     		$fbIframe = "<iframe src=\"http://www.facebook.com/plugins/like.php?href={$currentPhoto}\" scrolling=\"no\" frameborder=\"0\" style=\"border:none; max-width:210px; height:100px; margin: 0 auto;\"></iframe>";
     		switch($this->context["rendererId"]){
     			case "sets" :
-	    			$linkTitle = Utility::createLink(
-	    								$this->modId,
-	    								$this->getUrl(array("rendererId"=>"set", "photosetId" => $photo["id"], "page"=>1, "perPage"=>9)),
-	    								$photo["title"]["_content"]);
+					$linkTitle = $photo["title"]["_content"];
     				$photo["id"] = $photo["primary"];
 	    			break;
     			case "interesting" :
-    				$linkTitle = Utility::createLink($this->modId, 
-    												$this->getUrl(array("rendererId"=>"photo",
-    														"farm"=>$photo["farm"],
-    														"server"=>$photo["server"],
-    														"id"=>$photo["id"],
-    														"secret"=>$photo["secret"],
-    														"title"=>$photo["title"])),
-    												$photo["title"]);
+					$linkTitle = $photo["title"];
     				break;
 				case "favorites" :
-    				$linkTitle = Utility::createLink($this->modId, 
-    												$this->getUrl(array("rendererId"=>"photo",
-    														"farm"=>$photo["farm"],
-    														"server"=>$photo["server"],
-    														"id"=>$photo["id"],
-    														"secret"=>$photo["secret"],
-    														"title"=>$photo["title"])),
-    												$photo["title"]);
+					$linkTitle = $photo["title"];
     				break;
     			case "set"	:
-    				//$linkTitle = "<a href=\"{$currentPhoto}\">{$photo["title"]}</a>{$fbIframe}";
-    				$linkTitle = Utility::createLink($this->modId, 
-    												$this->getUrl(array("rendererId"=>"photo",
-    														"farm"=>$photo["farm"],
-    														"server"=>$photo["server"],
-    														"id"=>$photo["id"],
-    														"secret"=>$photo["secret"],
-    														"title"=>$photo["title"])),
-    												$photo["title"]);
+					$linkTitle = $photo["title"];
     				break;
     			case "photos" :
-					//$linkTitle = "<a href=\"{$currentPhoto}\">{$title}</a>{$fbIframe}";
-					$linkTitle = Utility::createLink($this->modId, 
-    												$this->getUrl(array("rendererId"=>"photo",
-    														"farm"=>$photo["farm"],
-    														"server"=>$photo["server"],
-    														"id"=>$photo["id"],
-    														"secret"=>$photo["secret"],
-    														"title"=>$photo["title"])),
-    												$photo["title"]);
+					$linkTitle = $photo["title"];
     				break;
     			case "renderOnePhoto" :
     				//$linkTitle = 
@@ -205,11 +172,18 @@ class ContentModule extends Module {
     				$linkTitle = $title;
     				break;
     		}
+			
+			$photoLink = Utility::createLink($this->modId,
+								$this->getUrl(array("rendererId"=>"photo",
+								"farm"=>$photo["farm"],
+								"server"=>$photo["server"],
+								"id"=>$photo["id"],
+								"secret"=>$photo["secret"],
+								"title"=>$photo["title"])), 
+								$this->renderPhoto($photo, $size) . "<h3>{$linkTitle}</h3>" . "<p>{$photo["description"]["_content"]}</p>");
     		$posts .= <<<HTML
     			<li class="photo">
-    				{$this->renderPhoto($photo, $size)}
-    				<h3>{$linkTitle}</h3>
-    				<p>{$photo["description"]["_content"]}</p>
+					{$photoLink}
     			</li>
 HTML;
     	}
@@ -218,6 +192,57 @@ HTML;
     	return $posts;
     }
     
+	private function createListMobile(){
+    	$size = $count == 9 ? "m" : "s"; 
+
+			$posts = '<ul data-role="listview">';
+
+    	foreach($this->data as $photo){
+    		$title = $photo["title"];
+    		$link = "";
+
+    		switch($this->context["rendererId"]){
+    			case "sets" :
+					$linkTitle = $photo["title"]["_content"];
+    				$photo["id"] = $photo["primary"];
+	    			break;
+    			case "interesting" :
+					$linkTitle = $photo["title"];
+    				break;
+				case "favorites" :
+					$linkTitle = $photo["title"];
+    				break;
+    			case "set"	:
+					$linkTitle = $photo["title"];
+    				break;
+    			case "photos" :
+					$linkTitle = $photo["title"];
+    				break;
+    			case "renderOnePhoto" :
+    				//$linkTitle = 
+    				break;
+    			default :
+    				$linkTitle = $photo["title"];
+    				break;
+    		}
+
+    		$posts .= <<<HTML
+				<li data-theme="d" class="ui-btn">
+					<div class="ui-btn-inner ul-li" aria-hidden="true">
+						<div class="ui-btn-text">
+							<a href="#" class="ui-link-inherit">
+								{$this->renderPhoto($photo,$size, "ui-li-thumb")}
+								<h3 class="ui-li-heading">{$linkTitle}</h3>
+							</a>
+						</div>
+					</div>
+				</li>
+HTML;
+    	}
+
+    	return $posts . "</ul>";
+		
+	}
     private function renderDisplayLinks(){
     	$html = <<<HTML
 			<div class="mod-links">
@@ -340,5 +365,27 @@ HTML;
     	$this->title = " : " . $title;
     	return $this->renderContent($title . $fbIframe, "<div class=\"single-photo\"><img src=\"http://farm{$farm}.static.flickr.com/{$server}/{$id}_{$secret}_b.jpg\"></div>");
     }
+
+	public function renderMobile(){
+		return <<<HTML
+		testing
+HTML;
+	}
+
+	public function renderMobileInteresting(){
+		return <<<HTML
+		<div data-role="content" id="interesting">	
+			{$this->createListMobile()}
+		</div>
+HTML;
+	}
+	
+	public function renderMobileFavorites(){
+		return <<<HTML
+		<div data-role="content" id="favorites">	
+			{$this->renderFavorites()}
+		</div><!-- /content -->
+HTML;
+	}
 }
 ?>

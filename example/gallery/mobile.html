@@ -6,22 +6,46 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1"> 
 	<title>Web Module Framework</title> 
 	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.0rc2/jquery.mobile-1.0rc2.min.css" />
+	<style type="text/css">
+		.ui-li-heading {
+			margin-left : 86px;
+		}
+
+		.ui-li-has-thumb .ui-btn-inner a.ui-link-inherit, .ui-li-static.ui-li-has-thumb  {
+			padding-left : 0px;
+		}
+	</style>
 	<script src="http://code.jquery.com/jquery-1.6.4.min.js"></script>
 	<script src="http://code.jquery.com/mobile/1.0rc2/jquery.mobile-1.0rc2.min.js"></script>
+	<script src="js/iscroll.js" type="text/javascript" charset="utf-8"></script>
+	
+	
 </head> 
 
 	
-<body> 
-	<section data-role="page" id="interesting">
+<body>
+
+	<section data-role="page" id="interesting" data-add-back-btn="true" data-iscroll="enable">
 		{module-header}
 		{module-content-mobile-interesting}
 		{module-footer}
 	</section>
-	<section data-role="page" id="favorites">
+	<section data-role="page" id="favorites" data-add-back-btn="true" data-iscroll="enable">
 		{module-header}
 		{module-content-mobile-favorites}
 		{module-footer}
 	</section>
+	<section data-role="page" id="aboutme" data-add-back-btn="true" data-iscroll="enable">
+		{module-header}
+		<div data-role="content" id="aboutme" data-add-back-btn="true">
+			This is my website
+		</div>
+		{module-footer}
+	</section>
+	<script>
+		$.mobile.fixedToolbars.show(true);
+		$.mobile.changePage('interesting');
+	</script>
 	
 </body>
 </html>

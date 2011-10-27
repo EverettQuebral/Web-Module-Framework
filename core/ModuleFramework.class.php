@@ -625,7 +625,6 @@ class ModuleFramework {
 			
     		if($rendererId !== ""){
     			// get the context and set to the data
-				//error_log("Renderer id " . $rendererId);
     			$moduleSource = $module[0]->xpath("//Sources/Source[@bindTo='" . $rendererId . "']");
     			$moduleSource = $moduleSource[0];
     		}
@@ -648,13 +647,13 @@ class ModuleFramework {
 		
 			// set the renderer
     		if($rendererId !== ""){
-    			$renderer = $module[0]->xpath("//Renderers/Renderer[@id='" . $rendererId . "']");
+    			$renderer = $module[0]->Renderers->xpath("Renderer[@id='" . $rendererId . "']");
     		}
     		else {
-    			$renderer = $module[0]->xpath("//Renderers/Renderer[@default='true']");	
+    			$renderer = $module[0]->Renderers->xpath("Renderer[@default='true']");
     		}
     		
-    		$this->modules[$modId]["renderer"] = (string) $renderer[0];
+			$this->modules[$modId]["renderer"] = (string) $renderer[0];
 			$this->modules[$modId]["rendererId"] = $rendererId;
 			$this->context[$modId] = array("rendererId"=>$rendererId);
 			
@@ -718,6 +717,7 @@ class ModuleFramework {
 			}
 			
 			// execute the renderer and put the html to the markup
+			error_log("renderer name " . $key . "->" . $renderer);
     	 	$this->modules[$key]["markup"] = $class->{$renderer}();
 			
     		//echo $class->{$this->modules[$moduleId]->renderer}();

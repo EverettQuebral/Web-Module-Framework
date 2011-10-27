@@ -25,11 +25,19 @@ HTML;
 		return <<<HTML
     		<div id="{$this->modId}" class="{$this->modId} mod-content">
 		        <a href="{$link}">
-		        	<h2>Everett Quebral</h2>
+		        	<h2>Everett Quebral: Gallery</h2>
 		        	<h3>Gallery</h3>
 		        </a>
 		    </div>
 HTML;
     }
+
+	public function renderMobile(){
+		return <<<HTML
+			<div data-role="header">
+				<h1>Everett Quebral</h1>
+			</div>
+HTML;
+	}
 }
 ?>

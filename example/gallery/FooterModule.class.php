@@ -18,5 +18,21 @@ class FooterModule extends Module {
 
 HTML;
     }
+
+	public function renderMobile(){
+		return <<<HTML
+			<div data-role="footer" data-theme-"d">		
+				<div data-role="navbar">
+					<ul>
+						<li><a href="#interesting">Interesting</a></li>
+						<li><a href="#favorites">Favorites</a></li>
+						<li><a href="#">Sets</a></li>
+						<li><a href="#">Photos</a></li>
+						<li><a href="#aboutme">About Me</a></li>
+					</ul>
+				</div>
+			</div>
+HTML;
+	}
 }
 ?>
